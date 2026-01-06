@@ -61,14 +61,21 @@ initial_state = {
     'config': {"configurable": {"thread_id": "user-1"}}
 }
 
-# result = chatbot.invoke(initial_state, config={"configurable": {"thread_id": "user-1"}})
-# print("Result:", result)
+CONFIG = {"configurable": {"thread_id": "user-1"}}
+result = chatbot.invoke( 
+              {
+             'messages': [HumanMessage(content='What is the capital of USA')],
+              },
+              config=CONFIG
+            )
+
+print(chatbot.get_state(config=CONFIG).values['messages'])
 # print("Messages:", result['messages'])
 
-for message_chunk,metadata in chatbot.stream(
-  { 'messages':[HumanMessage(content="give me 70 line on ipl")]},
-  config={"configurable": {"thread_id": "1"}},
-  stream_mode="messages"
-):
-   if message_chunk.content :
-      print(message_chunk.content, end=" ", flush=True)
+# for message_chunk,metadata in chatbot.stream(
+#   { 'messages':[HumanMessage(content="give me 70 line on ipl")]},
+#   config={"configurable": {"thread_id": "1"}},
+#   stream_mode="messages"
+# ):
+#    if message_chunk.content :
+#       print(message_chunk.content, end=" ", flush=True)

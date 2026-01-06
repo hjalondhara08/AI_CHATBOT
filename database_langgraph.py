@@ -32,7 +32,6 @@ class ChatState(TypedDict):
    messages : Annotated[list[BaseMessage],add_messages]
 
 
-thred_id = 1
 
 def chat_node(state: ChatState):
 
@@ -73,10 +72,10 @@ print("All thread IDs:", all_threads)
 
 
 
-initial_state = {
-    'messages': [HumanMessage(content='What is the capital of USA')],
-    'config': {"configurable": {"thread_id": "user-1"}}
-}
+# initial_state = {
+#     'messages': [HumanMessage(content='What is the capital of USA')],
+#     'config': {"configurable": {"thread_id": "user-1"}}
+# }
 
 # result = chatbot.invoke(initial_state, config={"configurable": {"thread_id": "user-1"}})
 # print("Result:", result)
@@ -90,14 +89,14 @@ initial_state = {
 #    if message_chunk.content :
 #       print(message_chunk.content, end=" ", flush=True)
 
-# response = chatbot.invoke(
-#       { 'messages':[HumanMessage(content="what is your model name")]},
-#          config={"configurable": {"thread_id": "3"}},
-#     )
+response = chatbot.invoke(
+      { 'messages':[HumanMessage(content="what is your model name")]},
+         config={"configurable": {"thread_id": "4"}},
+    )
 
 
 
-# print(response)
+print(response)
 
 
 

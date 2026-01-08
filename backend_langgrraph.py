@@ -62,6 +62,8 @@ initial_state = {
 }
 
 CONFIG = {"configurable": {"thread_id": "user-1"}}
+
+
 result = chatbot.invoke( 
               {
              'messages': [HumanMessage(content='What is the capital of USA')],

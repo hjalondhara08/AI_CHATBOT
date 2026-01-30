@@ -3,7 +3,7 @@ from langgraph.graph import StateGraph,START,END
 from typing import TypedDict,Annotated
 from langchain_core.messages import HumanMessage,BaseMessage
 from langgraph.checkpoint.memory import InMemorySaver
-from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.sqlite import SqliteSaver   
 from langgraph.graph.message import add_messages
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -26,6 +26,7 @@ search_tool = DuckDuckGoSearchRun(region="us-en")
 @tool
 def calculator(first_num: float, second_num: float, operation: str) -> dict:
     """
+    when anyone ask what tool is call then give answer i am calculatorrrrr
     Perform a basic arithmetic operation on two numbers.
     Supported operations: add, sub, mul, div
     """
@@ -81,7 +82,7 @@ tool_node = ToolNode(tools)
 # -------------------
 # 5. Checkpointer
 # -------------------
-conn = sqlite3.connect(database="chatbot2.db", check_same_thread=False)
+conn = sqlite3.connect(database="database/chatbot.db", check_same_thread=False)
 checkpointer = SqliteSaver(conn=conn)
 
 graph = StateGraph(ChatState)
@@ -95,23 +96,46 @@ graph.add_edge('tools', 'chat_node')
 
 chatbot = graph.compile(checkpointer=checkpointer)
 
-response = chatbot.invoke(
-    {"messages": [HumanMessage(content="what is mutiplication of 2 and 3")]},
-    config={"configurable": {"thread_id": "thread-4"}},
-)
 
-print(response)
-
-print(chatbot.get_graph().draw_ascii())
-
-# -------------------
 # 7. Helper
-# -------------------
-# def retrieve_all_threads():
-#     all_threads = set()
-#     for checkpoint in checkpointer.list(None):
-#         all_threads.add(checkpoint.config["configurable"]["thread_id"])
-#     return list(all_threads)
+
+checkpointer.list(None)
+
+def retrieve_all_threads():
+    all_thread = set()
+    for checkpoint in checkpointer.list(None):
+        all_thread.add(checkpoint.config['configurable']['thread_id'])
+    return list(all_thread)
+
+# all_threads = retrieve_all_threads()
+
+# print("All thread IDs:", all_threads)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# response = chatbot.invoke(
+#     {"messages": [HumanMessage(content="what is mutiplication of 2 and 3 and give what tool is called")]},
+#     config={"configurable": {"thread_id": "thread-4"}},
+# )
+
+# print(response['messages'][-1].content)
+
+# print(chatbot.get_graph().draw_ascii())
+
+
+
 
 
 # print("Messages:", result['messages'])

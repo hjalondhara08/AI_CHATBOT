@@ -11,7 +11,7 @@ from database_langgraph import retrieve_all_threads
 os.getenv("LANGCHAIN_API_KEY")
 
 
-config = {"configurable": {"thread_id": "1"}}
+
 #****************************Utility Functions *****************************
 def thread_id_generator():
     thread_id = uuid.uuid4()
@@ -85,38 +85,20 @@ for message in st.session_state['message_history']:
 user_input = st.chat_input("Enter your message:")
 
 if user_input:
-    response = chatbot.invoke({'messages': [HumanMessage(content=user_input)]}, config=config)
-    result = response['messages'][-1].content
 
-    st.session_state['message_history'].append({'role':'user','content':user_input})
-    with st.chat_message("user"):
-        st.write(user_input)
-    
+    # first add the message to message_history
+    st.session_state['message_history'].append({'role': 'user', 'content': user_input})
+    with st.chat_message('user'):
+        st.text(user_input)
 
-    config = {
-              "configurable": {"thread_id": st.session_state['thread_id']},
-              "metadata": {
-                "thred_id" : st.session_state['thread_id']
-              },
-              "run_name": "AI_CHATBOT"
-    }
+    CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
 
-    # with st.chat_message("assistant"):
-
-    #  ai_message =  st.write_stream(
-    #   message_chunk.content for message_chunk,metadata in chatbot.stream(
-    #   { 'messages':[HumanMessage(content=user_input)]},
-    #   config=config,
-    #   stream_mode="messages"
-    # )
-    # )
-
-
+     # first add the message to message_history
     with st.chat_message("assistant"):
         def ai_only_stream():
             for message_chunk, metadata in chatbot.stream(
                 {"messages": [HumanMessage(content=user_input)]},
-                config=config,
+                # config=CONFIG,
                 stream_mode="messages"
             ):
                 if isinstance(message_chunk, AIMessage):
@@ -125,5 +107,5 @@ if user_input:
 
         ai_message = st.write_stream(ai_only_stream())
 
-    st.session_state['message_history'].append({'role':'AI','content':ai_message})
+    st.session_state['message_history'].append({'role': 'assistant', 'content': ai_message})
 
